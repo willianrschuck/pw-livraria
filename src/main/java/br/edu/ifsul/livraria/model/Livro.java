@@ -4,6 +4,8 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -24,6 +26,18 @@ public class Livro extends LivroBasico {
 	
 	@Column(name = "valor")
 	private Double valor;
+	
+	@ManyToOne
+	@JoinColumn(name = "idioma_id")
+	private Idioma idioma;
+	
+	@ManyToOne
+	@JoinColumn(name = "formato_id")
+	private Formato formato;
+	
+	@ManyToOne
+	@JoinColumn(name = "catalogo_id")
+	private Catalogo catalogo;
 	
 	public Livro() {}
 

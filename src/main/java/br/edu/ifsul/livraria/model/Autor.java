@@ -1,5 +1,6 @@
 package br.edu.ifsul.livraria.model;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -7,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -25,6 +27,9 @@ public class Autor {
 	
 	@Column(name = "bibliografia")
 	private String bibliografia;
+	
+	@ManyToMany(mappedBy = "autores")
+	private List<LivroBasico> livroBasico;
 	
 	public Autor() {}
 

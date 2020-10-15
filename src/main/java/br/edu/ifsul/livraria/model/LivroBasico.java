@@ -1,6 +1,7 @@
 package br.edu.ifsul.livraria.model;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -8,6 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -30,6 +34,12 @@ public class LivroBasico {
 	
 	@Column(name = "datapublicacao")
 	private Calendar dataPublicacao;
+	
+	@ManyToMany
+	@JoinTable(name = "livrobasico_autores", 
+		joinColumns = {@JoinColumn(referencedColumnName = "livrobasico_id")},
+		inverseJoinColumns = {@JoinColumn(referencedColumnName = "autor_id")})
+	private List<Autor> autores;
 	
 	public LivroBasico() {}
 
