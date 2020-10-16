@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">
+	
+		<h:form id="formLista" prependId="false">
+			<p:growl id="growl"/>
+
+			<p:commandButton value="Novo"
+				actionListener="#{livroController.novo()}"
+				process="@this" update="formEdicao"
+				oncomplete="PF('formDialog').show();" />
+
+			<p:dataTable id="lista" var="obj" value="#{livroController.lista}" tableStyle="table-layout: auto">
+				
+				<p:column headerText="Id">
+					<h:outputText value="#{obj.isbn}" />
+				</p:column>
+				
+				<p:column headerText="Título">
+					<h:outputText value="#{obj.titulo}" />
+				</p:column>
+				
+				<p:column headerText="Resumo">
+					<h:outputText value="#{obj.resumo}" />
+				</p:column>
+				
+				<p:column headerText="Editora">
+					<h:outputText value="#{obj.editora}" />
+				</p:column>
+				
+				<p:column headerText="Data Publicação">
+					<h:outputText value="#{obj.dataPublicacao}" />
+				</p:column>
+				
+				<p:column headerText="Código de Barras">
+					<h:outputText value="#{obj.codigoBarras}" />
+				</p:column>
+				
+				<p:column headerText="Páginas">
+					<h:outputText value="#{obj.numeroPaginas}" />
+				</p:column>
+				
+				<p:column headerText="Ativo">
+					<h:outputText value="#{obj.ativo ? 'Sim' : 'Não'}" />
+				</p:column>
+				
+				<p:column headerText="Valor">
+					<h:outputText value="#{obj.valor}" />
+				</p:column>
+				
+				<p:column headerText="Idioma">
+					<h:outputText value="#{obj.idioma.nome}" />
+				</p:column>
+				
+				<p:column headerText="Formato">
+					<h:outputText value="#{obj.formato.nome}" />
+				</p:column>
+					
+				<p:column headerText="Autores">
+					<ui:repeat var="autor" value="#{obj.autores}" varStatus="status">
+						<h:outputText value="#{autor.nome}#{status.last ? '' : ', '}" />
+					</ui:repeat>
+				</p:column>
+				
+				<p:column style="width: 70px; text-align: center">
+					<p:commandButton icon="pi pi-pencil" title="Editar"
+							actionListener="#{livroController.editar(obj.isbn)}"
+							process="@this" update="formEdicao"
+							oncomplete="PF('formDialog').show();" />
+					<p:commandButton icon="pi pi-trash" title="Remover" style="margin-left: 2px"
+							actionListener="#{livroController.remover(obj.isbn)}"
+							process="@this" update="@form" />
+				</p:column>
+				
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog header="Edição" widgetVar="formDialog" resizable="false" modal="true" width="50%" height="100%">
+			
+			<h:form id="formEdicao" prependId="false">
+				<p:growl id="growEdicaol" />
+				
+				<div align="center">
+					<p:panelGrid columns="2">
+					
+						<p:outputLabel value="ISBN" />
+						<p:inputText id="id" value="#{livroController.livro.isbn}" size="15" required="true" readonly="#{livroController.livro.isbn != null}"/>
+						
+						<p:outputLabel value="Título" for="txtTitulo"/>
+						<p:inputText id="txtTitulo" value="#{livroController.livro.titulo}" size="50" required="true"/>
+						
+						<p:outputLabel value="Resumo" for="txtResumo"/>
+						<p:inputText id="txtResumo" value="#{livroController.livro.resumo}" size="50" required="true"/>
+						
+						<p:outputLabel value="Editora" for="txtEditora"/>
+						<p:inputText id="txtEditora" value="#{livroController.livro.editora}" size="50" required="true"/>
+						
+						<p:outputLabel value="Data Publicação" for="dataPublicacao"/>
+						<p:datePicker id="dataPublicacao" pattern="dd/MM/yyyy" value="#{livroController.livro.dataPublicacao}" required="true"/>
+						
+						<p:outputLabel value="Código de Barras" for="txtCodigoBarras"/>
+						<p:inputText id="txtCodigoBarras" value="#{livroController.livro.codigoBarras}" size="50" required="true"/>
+						
+						<p:outputLabel value="Número Páginas" for="txtNumeroPaginas"/>
+						<p:inputNumber id="txtNumeroPaginas" value="#{livroController.livro.numeroPaginas}" required="true"/>
+						
+						<p:outputLabel value="Ativo" for="ativo"/>
+						<p:selectBooleanCheckbox id="ativo" value="#{livroController.livro.ativo}" size="50" required="true"/>
+						
+						<p:outputLabel value="Valor" for="txtValor"/>
+						<p:inputNumber id="txtValor" value="#{livroController.livro.valor}" required="true"/>
+						
+						<p:outputLabel value="Idioma" for="idioma"/>
+						<p:selectOneMenu id="idioma" value="#{livroController.livro.idioma}" converter="#{idiomaConverter}"
+								filter="true" filterMatchMode="startsWith" required="true">
+							<f:selectItem value="#{null}" itemLabel="Selecione..." noSelectionOption="true"/>
+							<f:selectItems value="#{idiomaController.lista}" var="idioma" itemValue="#{idioma}" itemLabel="#{idioma.nome}"/>
+						</p:selectOneMenu>
+						
+						<p:outputLabel value="Formato" for="formato"/>
+						<p:selectOneMenu id="formato" value="#{livroController.livro.formato}" converter="#{formatoConverter}"
+								filter="true" filterMatchMode="startsWith" required="true">
+							<f:selectItem value="#{null}" itemLabel="Selecione..." noSelectionOption="true"/>
+							<f:selectItems value="#{formatoController.lista}" var="formato" itemValue="#{formato}" itemLabel="#{formato.nome}"/>
+						</p:selectOneMenu>
+						
+						<h:outputLabel value="Autores" for="autores"/>
+						<p:autoComplete id="autores" multiple="true" value="#{livroController.livro.autores}"
+							completeMethod="#{livroController.completeAutor}" var="autor" itemLabel="#{autor.nome}"
+							itemValue="#{autor}" converter="#{autorConverter}" forceSelection="true">
+							<p:column>
+								<h:outputText value="#{autor.nome}" />
+							</p:column>
+						</p:autoComplete>
+
+					</p:panelGrid>
+				</div>
+				
+				<p:panel>
+					<div align="center">
+					
+						<p:commandButton value="Salvar" icon="pi pi-save"
+							actionListener="#{livroController.salvar()}"
+							update="lista formEdicao"
+							oncomplete="if(!args.validationFailed){PF('formDialog').hide()};" />
+							
+					</div>
+				</p:panel>
+				
+			</h:form>
+			
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

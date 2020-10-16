@@ -1,11 +1,12 @@
 package br.edu.ifsul.livraria.model;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -13,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "livrobasico")
@@ -32,13 +35,14 @@ public class LivroBasico {
 	@Column(name = "editora")
 	private String editora;
 	
+	@Temporal(TemporalType.DATE)
 	@Column(name = "datapublicacao")
-	private Calendar dataPublicacao;
+	private Date dataPublicacao;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "livrobasico_autores", 
-		joinColumns = {@JoinColumn(referencedColumnName = "livrobasico_id")},
-		inverseJoinColumns = {@JoinColumn(referencedColumnName = "autor_id")})
+		joinColumns = {@JoinColumn(name = "livrobasico_id")},
+		inverseJoinColumns = {@JoinColumn(name = "autor_id")})
 	private List<Autor> autores;
 	
 	public LivroBasico() {}
@@ -50,7 +54,15 @@ public class LivroBasico {
 	public void setIsbn(String isbn) {
 		this.isbn = isbn;
 	}
-
+	
+	public String getTitulo() {
+		return titulo;
+	}
+	
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+	
 	public String getResumo() {
 		return resumo;
 	}
@@ -67,12 +79,20 @@ public class LivroBasico {
 		this.editora = editora;
 	}
 
-	public Calendar getDataPublicacao() {
+	public Date getDataPublicacao() {
 		return dataPublicacao;
 	}
 
-	public void setDataPublicacao(Calendar dataPublicacao) {
+	public void setDataPublicacao(Date dataPublicacao) {
 		this.dataPublicacao = dataPublicacao;
+	}
+	
+	public List<Autor> getAutores() {
+		return autores;
+	}
+	
+	public void setAutores(List<Autor> autores) {
+		this.autores = autores;
 	}
 
 	@Override
