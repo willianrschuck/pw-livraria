@@ -3,6 +3,7 @@
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:define name="conteudo">
@@ -14,8 +15,41 @@
 				actionListener="#{formatoController.novo()}"
 				process="@this" update="formEdicao"
 				oncomplete="PF('formDialog').show();" />
+				
+			<div align="center">
+				<p:panelGrid id="pgFiltro" columns="11" style="width: 100%">
+				
+					<p:outputLabel value="Filtro"/>
+					<p:selectOneMenu value="#{formatoController.dao.filtroSelecionado}" converter="#{formatoController.dao.filterConverter}">
+						<f:selectItems value="#{formatoController.dao.filtros}" var="filtro" itemValue="#{filtro}"/>
+						<p:ajax process="@this" update="lista"/>
+					</p:selectOneMenu>
+					
+					<p:outputLabel value="Termo"/>
+					<p:inputText value="#{formatoController.dao.valorFiltro}">
+						<p:ajax event="blur" update="lista"/>
+					</p:inputText>
+					
+					<p:commandButton value="Buscar" update="lista"/>
+					
+					<p:outputLabel value="Máximo de objetos"/>
+					<p:inputNumber value="#{formatoController.dao.objetosPorPagina}" decimalPlaces="0" thousandSeparator="">
+						<p:ajax event="blur" update="lista"/>
+					</p:inputNumber>
+					
+					<p:commandButton icon="pi pi-step-backward" actionListener="#{formatoController.dao.primeiraPagina()}" process="@this" update="lista"/>
+					<p:commandButton icon="pi pi-chevron-left" actionListener="#{formatoController.dao.paginaAnterior()}" process="@this" update="lista"/>
+					<p:commandButton icon="pi pi-chevron-right" actionListener="#{formatoController.dao.proximaPagina()}" process="@this" update="lista"/>
+					<p:commandButton icon="pi pi-step-forward" actionListener="#{formatoController.dao.ultimaPagina()}" process="@this" update="lista"/>				
+					
+				</p:panelGrid>
+			</div>
 
-			<p:dataTable id="lista" var="obj" value="#{formatoController.lista}" tableStyle="table-layout: auto">
+			<p:dataTable id="lista" var="obj" value="#{formatoController.dao.listaLazy}" tableStyle="table-layout: auto">
+				
+				<f:facet name="footer">
+					<h:outputText value="#{formatoController.dao.mensagemNavegacao}"/>
+				</f:facet>
 				
 				<p:column headerText="Id">
 					<h:outputText value="#{obj.id}" />

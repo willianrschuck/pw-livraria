@@ -16,7 +16,8 @@
 				process="@this" update="formEdicao"
 				oncomplete="PF('formDialog').show();" />
 
-			<p:dataTable id="lista" var="obj" value="#{livroController.lista}" tableStyle="table-layout: auto">
+			<p:dataTable id="lista" var="obj" value="#{livroController.lista}" tableStyle="table-layout: auto"
+				paginator="true">
 				
 				<p:column headerText="Id">
 					<h:outputText value="#{obj.isbn}" />

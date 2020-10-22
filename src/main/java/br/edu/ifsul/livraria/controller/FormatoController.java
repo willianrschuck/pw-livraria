@@ -1,5 +1,6 @@
 package br.edu.ifsul.livraria.controller;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -12,7 +13,7 @@ import br.edu.ifsul.livraria.util.JsfUtil;
 
 @Named
 @ViewScoped
-public class FormatoController extends AbstractController {
+public class FormatoController extends AbstractController implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EJB private FormatoDAO dao;
@@ -72,13 +73,18 @@ public class FormatoController extends AbstractController {
 	
 	public List<Formato> getLista() {
 		if (lista == null) {
-			lista = dao.getListaTodos();
+			lista = dao.getListaLazy();
 		}
 		return lista;
 	}
 	
 	private void limparLista() {
 		lista = null;
+	}
+	
+	// TODO Refatorar e remover o acesso direto ao DAO
+	public FormatoDAO getDao() {
+		return dao;
 	}
 	
 }

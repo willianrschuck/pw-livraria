@@ -80,7 +80,7 @@ public class LivroController extends AbstractController {
 	
 	public List<Livro> getLista() {
 		if (lista == null) {
-			lista = dao.getListaTodos();
+			lista = dao.getListaLazy();
 		}
 		return lista;
 	}
@@ -91,7 +91,7 @@ public class LivroController extends AbstractController {
 	
 	public List<Autor> completeAutor(String query) {
 		if (autores == null) {
-			autores = autorDao.getListaTodos();
+			autores = autorDao.getListaLazy();
 		}
 		List<Autor> autoresResult = new ArrayList<>(5);
 		for (Autor autor : autores) {
