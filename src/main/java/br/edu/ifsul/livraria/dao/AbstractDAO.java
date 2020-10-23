@@ -82,41 +82,55 @@ public abstract class AbstractDAO<T> {
 		return em.createQuery(jpql, getPersistentClass()).getResultList();
 	}
 	
-	public List<T> getListaLazy() {
-		String jpql = "FROM " + getPersistentClass().getSimpleName();
-		String where = "";
+	private String buildJpql(TableFilter filter, String filterValue) {
+
+		filterValue = filterValue.replace("[';-]", "");
+		StringBuilder jpql = new StringBuilder();
 		
-		valorFiltro = valorFiltro.replace("[';-]", "");
-		if (!valorFiltro.isEmpty()) {
+		jpql.append("FROM ").append(getPersistentClass().getSimpleName());
+		
+		if (!filterValue.trim().isEmpty()) {
 			
-			switch (filtroSelecionado.getOperador()) {
+			switch (filter.getOperador()) {
 			case "=":
 				if (filtroSelecionado.getAtributo().equalsIgnoreCase("id")) {
 					try {
-						Integer.parseInt(valorFiltro);
+						Integer.parseInt(filterValue);
 					} catch (Exception e) {
-						valorFiltro = "0";
+						filterValue = "0";
 					}
-					where += " WHERE " + filtroSelecionado.getAtributo() + " = " + valorFiltro;
+					jpql.append(" WHERE ").append(filtroSelecionado.getAtributo()).append(" = ").append(valorFiltro);
 				}
 				break;
 				
 			case "like":
-				where += " WHERE upper(" + filtroSelecionado.getAtributo() + ") LIKE '" + valorFiltro.toUpperCase() +"%'";
+				jpql.append(" WHERE upper(").append(filtroSelecionado.getAtributo()).append(") LIKE '").append(valorFiltro.toUpperCase()).append("%'");
 				break;
 
 			default:
 				break;
 			}
+
+			jpql.append(" ORDER BY ").append(filtroSelecionado.getAtributo());
 			
 		}
 		
-		jpql += where;
-		jpql += " ORDER BY " + filtroSelecionado.getAtributo();
-
-		totalDeObjetos = em.createQuery(jpql).getResultList().size();
+		return jpql.toString();
 		
-		return em.createQuery(jpql, getPersistentClass()).setFirstResult(paginaAtual).setMaxResults(objetosPorPagina).getResultList();
+		
+	}
+	
+	public List<T> load(String jpql, Integer firstResult, Integer maxResults) {
+		return em.createQuery(jpql, getPersistentClass()).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
+	}
+	
+	public List<T> getListaLazy() {
+		
+		String jpql = buildJpql(filtroSelecionado, valorFiltro);
+		
+		totalDeObjetos = em.createQuery(jpql).getResultList().size();
+		return load(jpql, paginaAtual, objetosPorPagina);
+		
 	}
 	
 	public T getBy(Object id) {
