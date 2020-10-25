@@ -15,9 +15,18 @@
 				actionListener="#{livroController.novo()}"
 				process="@this" update="formEdicao"
 				oncomplete="PF('formDialog').show();" />
+				
+			<div align="center">
+				<ui:include src="/templates/filtro-lista-lazy.xhtml">
+					<ui:param name="filtroTabela" value="#{livroController.tabelaLazy}"/>
+				</ui:include>
+			</div>
 
-			<p:dataTable id="lista" var="obj" value="#{livroController.lista}" tableStyle="table-layout: auto"
-				paginator="true">
+			<p:dataTable id="lista" var="obj" value="#{livroController.tabelaLazy.lista}" tableStyle="table-layout: auto">
+				
+				<f:facet name="footer">
+					<h:outputText value="#{livroController.tabelaLazy.mensagemNavegacao}"/>
+				</f:facet>
 				
 				<p:column headerText="Id">
 					<h:outputText value="#{obj.isbn}" />

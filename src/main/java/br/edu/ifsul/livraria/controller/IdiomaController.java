@@ -72,7 +72,7 @@ public class IdiomaController extends AbstractController {
 	
 	public List<Idioma> getLista() {
 		if (lista == null) {
-			lista = dao.getListaLazy();
+			lista = dao.getLista();
 		}
 		return lista;
 	}

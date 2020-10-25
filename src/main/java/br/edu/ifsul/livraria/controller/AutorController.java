@@ -72,7 +72,7 @@ public class AutorController extends AbstractController {
 	
 	public List<Autor> getLista() {
 		if (lista == null) {
-			lista = dao.getListaLazy();
+			lista = dao.getLista();
 		}
 		return lista;
 	}

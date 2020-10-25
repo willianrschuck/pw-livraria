@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<div align="center">
+
+	<p:panelGrid id="pgFiltro" style="width: 100%; table-layout: auto">
+	
+		<p:row>
+			<p:column style="width: 1px">
+				<p:outputLabel value="Filtro"/>
+			</p:column>
+			<p:column style="width: 1px">
+				<p:selectOneMenu id="filtro" value="#{filtroTabela.filtroSelecionado}" converter="#{filtroTabela.filterConverter}" style="width: 150px">
+					<f:selectItems value="#{filtroTabela.filtros}" var="filtro" itemValue="#{filtro}"/>
+					<p:ajax process="@this" update="lista"/>
+				</p:selectOneMenu>
+			</p:column>
+
+			<p:column style="width: 1px">
+				<p:outputLabel value="Termo"/>
+			</p:column>
+			<p:column>
+				<p:inputText id="valorFiltro" value="#{filtroTabela.valorFiltro}" style="width: 100%">
+					<p:ajax event="blur" update="lista"/>
+				</p:inputText>
+			</p:column>
+
+			<p:column style="width: 1px">
+				<p:commandButton value="Buscar" process="filtro valorFiltro" update="lista"/>
+			</p:column>
+			
+			<p:column style="width: 170px">
+				<p:outputLabel value="Máximo de objetos"/>
+			</p:column>
+			<p:column style="width: 1px">
+				<p:inputNumber value="#{filtroTabela.objetosPorPagina}" decimalPlaces="0" thousandSeparator="" size="2">
+					<p:ajax event="blur" update="lista"/>
+				</p:inputNumber>
+			</p:column>
+
+			<p:column style="width: 160px">
+				<p:commandButton icon="pi pi-step-backward" actionListener="#{filtroTabela.primeiraPagina()}" process="@this" update="lista"/>
+				<p:commandButton icon="pi pi-chevron-left" actionListener="#{filtroTabela.paginaAnterior()}" process="@this" update="lista" style="margin-left: 2px"/>
+				<p:commandButton icon="pi pi-chevron-right" actionListener="#{filtroTabela.proximaPagina()}" process="@this" update="lista" style="margin-left: 2px"/>
+				<p:commandButton icon="pi pi-step-forward" actionListener="#{filtroTabela.ultimaPagina()}" process="@this" update="lista" style="margin-left: 2px"/>				
+			</p:column>
+
+		</p:row>
+		
+		
+	</p:panelGrid>
+</div>
+
+</ui:composition>

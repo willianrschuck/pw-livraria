@@ -1,69 +1,20 @@
 package br.edu.ifsul.livraria.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import br.edu.ifsul.livraria.converter.TableFilterConverter;
+import br.edu.ifsul.livraria.util.LazyTabelaDAO;
 
-public abstract class AbstractDAO<T> {
+public abstract class AbstractDAO<T> implements LazyTabelaDAO<T> {
 
 	@PersistenceContext(unitName = "pu-livraria")
 	private EntityManager em;
 	
-	/* -- Atributos da lista lazy -- */
-	protected List<TableFilter> filtros = new ArrayList<>();
-	protected TableFilter filtroSelecionado;
-	protected String valorFiltro = "";
-	protected TableFilterConverter filterConverter;
-	protected Integer objetosPorPagina = 2;
-	protected Integer paginaAtual = 0;
-	protected Integer totalDeObjetos = 0;
-	
 	public AbstractDAO() {}
 	
 	protected abstract Class<T> getPersistentClass();
-	
-	public void primeiraPagina() {
-		paginaAtual = 0;
-	}
-	
-	public void paginaAnterior() {
-		paginaAtual -= objetosPorPagina;
-		if (paginaAtual < 0) {
-			paginaAtual = 0;
-		}
-	}
-	
-	public void proximaPagina() {
-		if (paginaAtual + objetosPorPagina < totalDeObjetos) {
-			paginaAtual += objetosPorPagina;
-		}
-	}
-	
-	public void ultimaPagina() {
-		Integer resto = totalDeObjetos % objetosPorPagina ;
-		if (resto == 0) {
-			paginaAtual = totalDeObjetos - objetosPorPagina;
-		} else {
-			paginaAtual = totalDeObjetos - resto;
-		}
-	}
-	
-	public String getMensagemNavegacao() {
-		int ate = paginaAtual + objetosPorPagina;
-		if (ate > totalDeObjetos) {
-			ate = totalDeObjetos;
-		}
-		if (totalDeObjetos > 0) {
-			return "Listando de " + (paginaAtual+1) + " até " + ate + " de " + totalDeObjetos + " registros ";
-		} else {
-			return "Nenhum registro encontrado.";
-		}
-		
-	}
 	
 	public void persist(T object) {
 		em.persist(object);
@@ -82,6 +33,20 @@ public abstract class AbstractDAO<T> {
 		return em.createQuery(jpql, getPersistentClass()).getResultList();
 	}
 	
+	public T getBy(Object id) {
+		return em.find(getPersistentClass(), id);
+	}
+	
+	@Override
+	public List<T> load(Integer firstValue, Integer maxResult, TableFilter filtro, String filterValue) {
+		return em.createQuery(buildJpql(filtro, filterValue), getPersistentClass()).setFirstResult(firstValue).setMaxResults(maxResult).getResultList();
+	}
+	
+	@Override
+	public Integer count(Integer firstValue, Integer maxResult, TableFilter filtro, String filterValue) {
+		return em.createQuery(buildJpql(filtro, filterValue), getPersistentClass()).getResultList().size();
+	}
+	
 	private String buildJpql(TableFilter filter, String filterValue) {
 
 		filterValue = filterValue.replace("[';-]", "");
@@ -93,110 +58,30 @@ public abstract class AbstractDAO<T> {
 			
 			switch (filter.getOperador()) {
 			case "=":
-				if (filtroSelecionado.getAtributo().equalsIgnoreCase("id")) {
+				if (filter.getAtributo().equalsIgnoreCase("id")) {
 					try {
 						Integer.parseInt(filterValue);
 					} catch (Exception e) {
 						filterValue = "0";
 					}
-					jpql.append(" WHERE ").append(filtroSelecionado.getAtributo()).append(" = ").append(valorFiltro);
 				}
+				jpql.append(" WHERE ").append(filter.getAtributo()).append(" = ").append(filterValue);
 				break;
 				
 			case "like":
-				jpql.append(" WHERE upper(").append(filtroSelecionado.getAtributo()).append(") LIKE '").append(valorFiltro.toUpperCase()).append("%'");
+				jpql.append(" WHERE upper(").append(filter.getAtributo()).append(") LIKE '").append(filterValue.toUpperCase()).append("%'");
 				break;
 
 			default:
 				break;
 			}
 
-			jpql.append(" ORDER BY ").append(filtroSelecionado.getAtributo());
+			jpql.append(" ORDER BY ").append(filter.getAtributo());
 			
 		}
 		
 		return jpql.toString();
 		
-		
 	}
-	
-	public List<T> load(String jpql, Integer firstResult, Integer maxResults) {
-		return em.createQuery(jpql, getPersistentClass()).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
-	}
-	
-	public List<T> getListaLazy() {
-		
-		String jpql = buildJpql(filtroSelecionado, valorFiltro);
-		
-		totalDeObjetos = em.createQuery(jpql).getResultList().size();
-		return load(jpql, paginaAtual, objetosPorPagina);
-		
-	}
-	
-	public T getBy(Object id) {
-		return em.find(getPersistentClass(), id);
-	}
-	
-	public void addFiltro(TableFilter filtro) {
-		this.filtros.add(filtro);
-	}
-
-	public List<TableFilter> getFiltros() {
-		return filtros;
-	}
-
-	public TableFilter getFiltroSelecionado() {
-		return filtroSelecionado;
-	}
-
-	public void setFiltroSelecionado(TableFilter filtroSelecionado) {
-		this.filtroSelecionado = filtroSelecionado;
-	}
-
-	public String getValorFiltro() {
-		return valorFiltro;
-	}
-
-	public void setValorFiltro(String valorFiltro) {
-		this.valorFiltro = valorFiltro;
-	}
-
-	public TableFilterConverter getFilterConverter() {
-		return filterConverter;
-	}
-
-	public void setFilterConverter(TableFilterConverter filterConverter) {
-		this.filterConverter = filterConverter;
-	}
-
-	public Integer getObjetosPorPagina() {
-		return objetosPorPagina;
-	}
-
-	public void setObjetosPorPagina(Integer objetosPorPagina) {
-		this.objetosPorPagina = objetosPorPagina;
-	}
-
-	public Integer getPaginaAtual() {
-		return paginaAtual;
-	}
-
-	public void setPaginaAtual(Integer paginaAtual) {
-		this.paginaAtual = paginaAtual;
-	}
-
-	public Integer getTotalDeObjetos() {
-		return totalDeObjetos;
-	}
-
-	public void setTotalDeObjetos(Integer totalDeObjetos) {
-		this.totalDeObjetos = totalDeObjetos;
-	}
-
-	public void setFiltros(List<TableFilter> filtros) {
-		this.filtros = filtros;
-	}
-	
-	
 	
 }

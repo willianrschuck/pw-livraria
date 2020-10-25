@@ -1,6 +1,7 @@
 package br.edu.ifsul.livraria.dao;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class TableFilter implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -37,6 +38,23 @@ public class TableFilter implements Serializable {
 
 	public void setOperador(String operador) {
 		this.operador = operador;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(atributo, operador);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof TableFilter)) {
+			return false;
+		}
+		TableFilter other = (TableFilter) obj;
+		return Objects.equals(atributo, other.atributo) && Objects.equals(operador, other.operador);
 	}
 
 	@Override
