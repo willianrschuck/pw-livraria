@@ -26,7 +26,7 @@
 				</p:column>
 				
 				<p:column headerText="Bibliografia">
-					<h:outputText value="#{obj.bibliografia}" />
+					<h:outputText value="#{obj.bibliografia.length() gt 150 ? obj.bibliografia.substring(0,147).concat('...') : obj.bibliografia}" />
 				</p:column>
 				
 				<p:column style="width: 70px; text-align: center">
@@ -57,7 +57,7 @@
 						<p:inputText id="txtNome" value="#{autorController.autor.nome}" size="50" required="true"/>
 						
 						<p:outputLabel value="Bibliografia" for="txtBibliografia"/>
-						<p:inputTextarea id="txtBibliografia" value="#{autorController.autor.bibliografia}" 
+						<p:inputTextarea id="txtBibliografia" value="#{autorController.autor.bibliografia}" rows="5" cols="50" autoResize="false"
 								required="true" placeholder="Obrigatório"/>
 								
 					</p:panelGrid>

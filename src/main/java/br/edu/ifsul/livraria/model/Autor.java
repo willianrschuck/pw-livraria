@@ -25,7 +25,7 @@ public class Autor {
 	@Column(name = "nome")
 	private String nome;
 	
-	@Column(name = "bibliografia")
+	@Column(name = "bibliografia", columnDefinition = "text")
 	private String bibliografia;
 	
 	@ManyToMany(mappedBy = "autores")
