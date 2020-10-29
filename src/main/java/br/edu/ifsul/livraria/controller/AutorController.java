@@ -65,7 +65,11 @@ public class AutorController extends AbstractController {
 	public String irParaLista() {
 		return "/autor/lista.xhtml?faces-redirect=true";
 	}
-
+	
+	private void limparLista() {
+		lista = null;
+	}
+	
 	public Autor getAutor() {
 		return autor;
 	}
@@ -76,9 +80,4 @@ public class AutorController extends AbstractController {
 		}
 		return lista;
 	}
-	
-	private void limparLista() {
-		lista = null;
-	}
-	
 }

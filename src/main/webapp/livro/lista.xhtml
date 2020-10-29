@@ -96,61 +96,82 @@
 			<h:form id="formEdicao" prependId="false">
 				<p:growl id="growEdicaol" />
 				
-				<div align="center">
-					<p:panelGrid columns="2">
-					
-						<p:outputLabel value="ISBN" />
-						<p:inputText id="id" value="#{livroController.livro.isbn}" size="15" required="true" readonly="#{livroController.livro.isbn != null}"/>
-						
-						<p:outputLabel value="Título" for="txtTitulo"/>
-						<p:inputText id="txtTitulo" value="#{livroController.livro.titulo}" size="50" required="true"/>
-						
-						<p:outputLabel value="Resumo" for="txtResumo"/>
-						<p:inputText id="txtResumo" value="#{livroController.livro.resumo}" size="50" required="true"/>
-						
-						<p:outputLabel value="Editora" for="txtEditora"/>
-						<p:inputText id="txtEditora" value="#{livroController.livro.editora}" size="50" required="true"/>
-						
-						<p:outputLabel value="Data Publicação" for="dataPublicacao"/>
-						<p:datePicker id="dataPublicacao" pattern="dd/MM/yyyy" value="#{livroController.livro.dataPublicacao}" required="true"/>
-						
-						<p:outputLabel value="Código de Barras" for="txtCodigoBarras"/>
-						<p:inputText id="txtCodigoBarras" value="#{livroController.livro.codigoBarras}" size="50" required="true"/>
-						
-						<p:outputLabel value="Número Páginas" for="txtNumeroPaginas"/>
-						<p:inputNumber id="txtNumeroPaginas" value="#{livroController.livro.numeroPaginas}" required="true"/>
-						
-						<p:outputLabel value="Ativo" for="ativo"/>
-						<p:selectBooleanCheckbox id="ativo" value="#{livroController.livro.ativo}" size="50" required="true"/>
-						
-						<p:outputLabel value="Valor" for="txtValor"/>
-						<p:inputNumber id="txtValor" value="#{livroController.livro.valor}" required="true"/>
-						
-						<p:outputLabel value="Idioma" for="idioma"/>
-						<p:selectOneMenu id="idioma" value="#{livroController.livro.idioma}" converter="#{idiomaConverter}"
-								filter="true" filterMatchMode="startsWith" required="true">
-							<f:selectItem value="#{null}" itemLabel="Selecione..." noSelectionOption="true"/>
-							<f:selectItems value="#{idiomaController.lista}" var="idioma" itemValue="#{idioma}" itemLabel="#{idioma.nome}"/>
-						</p:selectOneMenu>
-						
-						<p:outputLabel value="Formato" for="formato"/>
-						<p:selectOneMenu id="formato" value="#{livroController.livro.formato}" converter="#{formatoConverter}"
-								filter="true" filterMatchMode="startsWith" required="true">
-							<f:selectItem value="#{null}" itemLabel="Selecione..." noSelectionOption="true"/>
-							<f:selectItems value="#{formatoController.lista}" var="formato" itemValue="#{formato}" itemLabel="#{formato.nome}"/>
-						</p:selectOneMenu>
-						
-						<h:outputLabel value="Autores" for="autores"/>
-						<p:autoComplete id="autores" multiple="true" value="#{livroController.livro.autores}"
-							completeMethod="#{livroController.completeAutor}" var="autor" itemLabel="#{autor.nome}"
-							itemValue="#{autor}" converter="#{autorConverter}" forceSelection="true">
-							<p:column>
-								<h:outputText value="#{autor.nome}" />
-							</p:column>
-						</p:autoComplete>
+				<p:tabView id="tab">
 
-					</p:panelGrid>
-				</div>
+					<p:tab title="Dados Gerais">
+						<div align="center">
+							<p:panelGrid columns="2">
+							
+								<p:outputLabel value="ISBN" />
+								<p:inputText id="id" value="#{livroController.livro.isbn}" size="15" required="true" readonly="#{livroController.livro.isbn != null}"/>
+								
+								<p:outputLabel value="Título" for="txtTitulo"/>
+								<p:inputText id="txtTitulo" value="#{livroController.livro.titulo}" size="50" required="true"/>
+								
+								<p:outputLabel value="Resumo" for="txtResumo"/>
+								<p:inputText id="txtResumo" value="#{livroController.livro.resumo}" size="50" required="true"/>
+								
+								<p:outputLabel value="Editora" for="txtEditora"/>
+								<p:inputText id="txtEditora" value="#{livroController.livro.editora}" size="50" required="true"/>
+								
+								<p:outputLabel value="Data Publicação" for="dataPublicacao"/>
+								<p:datePicker id="dataPublicacao" pattern="dd/MM/yyyy" value="#{livroController.livro.dataPublicacao}" required="true"/>
+								
+								<p:outputLabel value="Código de Barras" for="txtCodigoBarras"/>
+								<p:inputText id="txtCodigoBarras" value="#{livroController.livro.codigoBarras}" size="50" required="true"/>
+								
+								<p:outputLabel value="Número Páginas" for="txtNumeroPaginas"/>
+								<p:inputNumber id="txtNumeroPaginas" value="#{livroController.livro.numeroPaginas}" required="true"/>
+								
+								<p:outputLabel value="Ativo" for="ativo"/>
+								<p:selectBooleanCheckbox id="ativo" value="#{livroController.livro.ativo}" size="50" required="true"/>
+								
+								<p:outputLabel value="Valor" for="txtValor"/>
+								<p:inputNumber id="txtValor" value="#{livroController.livro.valor}" required="true"/>
+								
+								<p:outputLabel value="Idioma" for="idioma"/>
+								<p:selectOneMenu id="idioma" value="#{livroController.livro.idioma}" converter="#{idiomaConverter}"
+										filter="true" filterMatchMode="startsWith" required="true">
+									<f:selectItem value="#{null}" itemLabel="Selecione..." noSelectionOption="true"/>
+									<f:selectItems value="#{idiomaController.lista}" var="idioma" itemValue="#{idioma}" itemLabel="#{idioma.nome}"/>
+								</p:selectOneMenu>
+								
+								<p:outputLabel value="Formato" for="formato"/>
+								<p:selectOneMenu id="formato" value="#{livroController.livro.formato}" converter="#{formatoConverter}"
+										filter="true" filterMatchMode="startsWith" required="true">
+									<f:selectItem value="#{null}" itemLabel="Selecione..." noSelectionOption="true"/>
+									<f:selectItems value="#{formatoController.lista}" var="formato" itemValue="#{formato}" itemLabel="#{formato.nome}"/>
+								</p:selectOneMenu>
+								
+							</p:panelGrid>
+						</div>
+					</p:tab>
+					
+					<p:tab title="Autores">
+						<p:dataTable id="listaAutores" 
+								var="obj" value="#{livroController.livro.autores}"
+								rowIndexVar="index" 
+								tableStyle="table-layout: auto">
+							<f:facet name="header">
+								<p:commandButton value="Buscar" icon="pi pi-search" oncomplete="PF('dlgBuscaAutor').show();"/>
+							</f:facet>
+							
+							<p:column headerText="Id">
+								<h:outputText value="#{obj.id}" />
+							</p:column>
+							
+							<p:column headerText="Nome">
+								<h:outputText value="#{obj.nome}" />
+							</p:column>
+							
+							<p:column style="width: 35px; text-align: center">
+								<p:commandButton icon="pi pi-times" action="#{livroController.removerAutor(index)}" process="@this" update="listaAutores formBuscaAutores"/>
+							</p:column>
+							
+						</p:dataTable>
+					</p:tab>
+					
+				</p:tabView>
 				
 				<p:panel>
 					<div align="center">
@@ -165,6 +186,26 @@
 				
 			</h:form>
 			
+		</p:dialog>
+		
+		<p:dialog widgetVar="dlgBuscaAutor" header="Buscar Autores" resizable="false" modal="true" width="40%" height="100%">
+			<h:form id="formBuscaAutores">
+				<p:dataTable id="tableBuscaAutores"
+						value="#{livroController.autores}" var="obj"
+						rowKey="#{obj.id}"
+						selection="#{livroController.livro.autores}" selectionMode="multiple"
+						tableStyle="table-layout: auto">
+					<p:column headerText="Id">
+						<h:outputText value="#{obj.id}" />
+					</p:column>
+					<p:column headerText="Nome">
+						<h:outputText value="#{obj.nome}" />
+					</p:column>
+					<f:facet name="footer">
+						<p:commandButton value="Confirmar" update="tab:listaAutores" oncomplete="PF('dlgBuscaAutor').hide();"/>
+					</f:facet>
+				</p:dataTable>
+			</h:form>
 		</p:dialog>
 
 	</ui:define>

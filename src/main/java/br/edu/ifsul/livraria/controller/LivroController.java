@@ -1,6 +1,5 @@
 package br.edu.ifsul.livraria.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,11 +9,11 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import br.edu.ifsul.livraria.dao.AutorDAO;
+import br.edu.ifsul.livraria.dao.FiltroTabelaLazy;
 import br.edu.ifsul.livraria.dao.LivroDAO;
 import br.edu.ifsul.livraria.dao.TableFilter;
 import br.edu.ifsul.livraria.model.Autor;
 import br.edu.ifsul.livraria.model.Livro;
-import br.edu.ifsul.livraria.util.FiltroTabelaLazy;
 import br.edu.ifsul.livraria.util.JsfUtil;
 
 @Named
@@ -30,6 +29,7 @@ public class LivroController extends AbstractController {
 	private FiltroTabelaLazy<Livro> tabelaLazy;
 
 	private List<Autor> autores;
+	private List<Autor> autoresSelecionados;
 
 	
 	@PostConstruct
@@ -50,6 +50,7 @@ public class LivroController extends AbstractController {
 		try {
 			if (livro.getDataCadastro() == null) {
 				livro.setDataCadastro(new Date());
+				dao.persist(livro);
 			} else {
 				dao.merge(livro);
 			}
@@ -83,28 +84,31 @@ public class LivroController extends AbstractController {
 		return "/livro/lista.xhtml?faces-redirect=true";
 	}
 	
-	public Livro getLivro() {
-		return livro;
-	}
-
-	public FiltroTabelaLazy<Livro> getTabelaLazy() {
-		return tabelaLazy;
+	public void removerAutor(int index) {
+		livro.getAutores().remove(index);
 	}
 	
-	public List<Autor> completeAutor(String query) {
+	public List<Autor> getAutores() {
 		if (autores == null) {
 			autores = autorDao.getLista();
 		}
-		List<Autor> autoresResult = new ArrayList<>(5);
-		for (Autor autor : autores) {
-			if (autor.getNome().toLowerCase().contains(query.toLowerCase())) {
-				autoresResult.add(autor);
-				if (autoresResult.size() == 5) {
-					break;
-				}
-			}
-		}
-		return autoresResult;
+		return autores;
+	}
+
+	public List<Autor> getAutoresSelecionados() {
+		return autoresSelecionados;
+	}
+	
+	public void setAutoresSelecionados(List<Autor> autoresSelecionados) {
+		this.autoresSelecionados = autoresSelecionados;
+	}
+	
+	public Livro getLivro() {
+		return livro;
+	}
+	
+	public FiltroTabelaLazy<Livro> getTabelaLazy() {
+		return tabelaLazy;
 	}
 	
 }

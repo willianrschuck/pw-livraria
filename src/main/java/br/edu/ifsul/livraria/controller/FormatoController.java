@@ -8,10 +8,10 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
+import br.edu.ifsul.livraria.dao.FiltroTabelaLazy;
 import br.edu.ifsul.livraria.dao.FormatoDAO;
 import br.edu.ifsul.livraria.dao.TableFilter;
 import br.edu.ifsul.livraria.model.Formato;
-import br.edu.ifsul.livraria.util.FiltroTabelaLazy;
 import br.edu.ifsul.livraria.util.JsfUtil;
 
 @Named

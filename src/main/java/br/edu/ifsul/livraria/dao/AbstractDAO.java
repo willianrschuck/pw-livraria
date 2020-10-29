@@ -5,8 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import br.edu.ifsul.livraria.util.LazyTabelaDAO;
-
 public abstract class AbstractDAO<T> implements LazyTabelaDAO<T> {
 
 	@PersistenceContext(unitName = "pu-livraria")

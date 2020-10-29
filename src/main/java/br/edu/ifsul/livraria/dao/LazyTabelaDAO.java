@@ -1,8 +1,6 @@
-package br.edu.ifsul.livraria.util;
+package br.edu.ifsul.livraria.dao;
 
 import java.util.List;
-
-import br.edu.ifsul.livraria.dao.TableFilter;
 
 public interface LazyTabelaDAO<T> {
 
