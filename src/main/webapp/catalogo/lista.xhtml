@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/templates/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="conteudo">
+	
+		<h:form id="formLista" prependId="false">
+			<p:growl id="growl"/>
+
+			<p:commandButton value="Novo"
+				actionListener="#{catalogoController.novo()}"
+				process="@this" update="formEdicao"
+				oncomplete="PF('formDialog').show();" />
+				
+			<div align="center">
+				<ui:include src="/templates/filtro-lista-lazy.xhtml">
+					<ui:param name="filtroTabela" value="#{catalogoController.tabelaLazy}"/>
+				</ui:include>
+			</div>
+
+			<p:dataTable id="lista" var="obj" value="#{catalogoController.tabelaLazy.lista}" tableStyle="table-layout: auto">
+				
+				<f:facet name="footer">
+					<h:outputText value="#{catalogoController.tabelaLazy.mensagemNavegacao}"/>
+				</f:facet>
+				
+				<p:column headerText="Id">
+					<h:outputText value="#{obj.id}" />
+				</p:column>
+				
+				<p:column headerText="Nome">
+					<h:outputText value="#{obj.nome}" />
+				</p:column>
+				
+				<p:column headerText="Descricao">
+					<h:outputText value="#{obj.nome}" />
+				</p:column>
+				
+				<p:column style="width: 70px; text-align: center">
+					<p:commandButton icon="pi pi-pencil" title="Editar"
+							actionListener="#{catalogoController.editar(obj.id)}"
+							process="@this" update="formEdicao"
+							oncomplete="PF('formDialog').show();" />
+					<p:commandButton icon="pi pi-trash" title="Remover" style="margin-left: 2px"
+							actionListener="#{catalogoController.remover(obj.id)}"
+							process="@this" update="@form" />
+				</p:column>
+				
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog header="Edição" widgetVar="formDialog" resizable="false" modal="true" width="50%" height="100%">
+			
+			<h:form id="formEdicao" prependId="false">
+				<p:growl id="growEdicaol" />
+				
+				<div align="center">
+					<p:panelGrid columns="2">
+					
+						<p:outputLabel value="ID" />
+						<p:inputText id="id" value="#{catalogoController.catalogo.id}" size="5" readonly="true" />
+						
+						<p:outputLabel value="Nome" for="txtNome"/>
+						<p:inputText id="txtNome" value="#{catalogoController.catalogo.nome}" 
+								maxlength="50" size="50" required="true" placeholder="Obrigatório"/>
+								
+						<p:outputLabel value="Descricao" for="txtDescricao"/>
+						<p:inputText id="txtDescricao" value="#{catalogoController.catalogo.descricao}" 
+								maxlength="50" size="50" required="true" placeholder="Obrigatório"/>
+								
+					</p:panelGrid>
+				</div>
+				
+				<p:panel>
+					<div align="center">
+					
+						<p:commandButton value="Salvar" icon="pi pi-save"
+							actionListener="#{catalogoController.salvar()}"
+							update="lista formEdicao"
+							oncomplete="if(!args.validationFailed){PF('formDialog').hide()};" />
+							
+					</div>
+				</p:panel>
+				
+			</h:form>
+			
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

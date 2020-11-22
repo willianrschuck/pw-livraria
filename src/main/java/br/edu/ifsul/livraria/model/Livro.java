@@ -1,11 +1,15 @@
 package br.edu.ifsul.livraria.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -41,6 +45,12 @@ public class Livro extends LivroBasico {
 	@ManyToOne
 	@JoinColumn(name = "catalogo_id")
 	private Catalogo catalogo;
+	
+	@OneToMany
+	@JoinTable(name = "livro_imagem", 
+		joinColumns = {@JoinColumn(name = "livro_id")},
+		inverseJoinColumns = {@JoinColumn(name = "imagem_id")})
+	private List<Imagem> imagens = new ArrayList<Imagem>();
 	
 	public Livro() {}
 
@@ -98,6 +108,24 @@ public class Livro extends LivroBasico {
 	
 	public void setFormato(Formato formato) {
 		this.formato = formato;
+	}
+	
+	public List<Imagem> getImagens() {
+		return imagens;
+	}
+	
+	public void adicionarImagem(Imagem imagem) {
+		if (imagens == null) {
+			imagens = new ArrayList<>();
+		}
+		imagens.add(imagem);
+	}
+	
+	public void removerImagem(int index) {
+		if (imagens == null) {
+			return;
+		}
+		imagens.remove(index);
 	}
 	
 }

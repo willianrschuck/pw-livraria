@@ -171,6 +171,14 @@
 						</p:dataTable>
 					</p:tab>
 					
+					<p:tab title="Imagens">
+						<p:dataTable id="listaImagens">
+							<f:facet name="header">
+								<p:commandButton value="Adicionar" icon="pi pi-plus" oncomplete="PF('dlgEmvioImagem').show();"/>
+							</f:facet>
+						</p:dataTable>
+					</p:tab>
+					
 				</p:tabView>
 				
 				<p:panel>
@@ -205,6 +213,12 @@
 						<p:commandButton value="Confirmar" update="tab:listaAutores" oncomplete="PF('dlgBuscaAutor').hide();"/>
 					</f:facet>
 				</p:dataTable>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog widgetVar="dlgEmvioImagem" header="Enviar Imagem" resizable="false" modal="true" width="40%" height="100%">
+			<h:form id="formEnvioImagem">
+				
 			</h:form>
 		</p:dialog>
 
