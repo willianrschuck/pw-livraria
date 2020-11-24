@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -13,6 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Table(name = "livro")
@@ -46,7 +50,8 @@ public class Livro extends LivroBasico {
 	@JoinColumn(name = "catalogo_id")
 	private Catalogo catalogo;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "livro_imagem", 
 		joinColumns = {@JoinColumn(name = "livro_id")},
 		inverseJoinColumns = {@JoinColumn(name = "imagem_id")})

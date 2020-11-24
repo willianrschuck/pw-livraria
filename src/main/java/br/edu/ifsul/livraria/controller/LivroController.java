@@ -1,18 +1,20 @@
 package br.edu.ifsul.livraria.controller;
 
+import java.io.ByteArrayInputStream;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import br.edu.ifsul.livraria.dao.AutorDAO;
 import br.edu.ifsul.livraria.dao.FiltroTabelaLazy;
@@ -24,7 +26,7 @@ import br.edu.ifsul.livraria.model.Livro;
 import br.edu.ifsul.livraria.util.JsfUtil;
 
 @Named
-@ViewScoped
+@SessionScoped
 public class LivroController extends AbstractController {
 	private static final long serialVersionUID = 1L;
 
@@ -100,17 +102,18 @@ public class LivroController extends AbstractController {
 	
 	public void salvarImagem() {
 		livro.adicionarImagem(imagem);
+		JsfUtil.sendInfoMessage("Imagem adicionada com sucesso!");
 	}
 	
 	public void removerImagem(int index) {
 		livro.removerImagem(index);
 	}
 	
-	public void enviarFoto(FileUploadEvent event) {
+	public void enviarImagem(FileUploadEvent event) {
 		
 		try {
 			
-			imagem.setArqivo(event.getFile().getContents());
+			imagem.setArquivo(event.getFile().getContents());
 			imagem.setNome(event.getFile().getFileName().replaceAll("[ ]", "_"));
 			
 			JsfUtil.sendInfoMessage("Imagem enviada com sucesso!");
@@ -128,21 +131,31 @@ public class LivroController extends AbstractController {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		ExternalContext ec = facesContext.getExternalContext();
 		HttpServletResponse httpResponse = (HttpServletResponse) ec.getResponse();
-//		ServletContext servletContext = (ServletContext) ec.getContext();
 		
 		Imagem imagemDownload = livro.getImagens().get(index);
 		
 		try {
 			httpResponse.addHeader("Content-Disposition", "attachment; filename=" + imagemDownload.getNome());
-			httpResponse.setContentLength(imagemDownload.getArqivo().length);
+			httpResponse.setContentLength(imagemDownload.getArquivo().length);
 			httpResponse.setContentType("application/octet-stream");
-			httpResponse.getOutputStream().write(imagemDownload.getArqivo());
+			httpResponse.getOutputStream().write(imagemDownload.getArquivo());
 			httpResponse.getOutputStream().flush();
 			facesContext.responseComplete();
 		} catch (Exception e) {
 			JsfUtil.sendErrorMessage("Erro no download da imagem.");
 		}
 		
+	}
+	
+	public void visualizarImagem(int index) {
+		imagem = livro.getImagens().get(index);
+	}
+	
+	public StreamedContent getImagemDinamica() {
+		if (imagem != null) {
+			return new DefaultStreamedContent(new ByteArrayInputStream(imagem.getArquivo()));
+		}
+		return new DefaultStreamedContent();
 	}
 	
 	public void removerAutor(int index) {
@@ -162,6 +175,14 @@ public class LivroController extends AbstractController {
 	
 	public void setAutoresSelecionados(List<Autor> autoresSelecionados) {
 		this.autoresSelecionados = autoresSelecionados;
+	}
+	
+	public Imagem getImagem() {
+		return imagem;
+	}
+	
+	public void setImagem(Imagem imagem) {
+		this.imagem = imagem;
 	}
 	
 	public Livro getLivro() {

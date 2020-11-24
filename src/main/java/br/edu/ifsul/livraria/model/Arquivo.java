@@ -10,13 +10,13 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "imagem")
-public class Imagem {
+@Table(name = "arquivo")
+public class Arquivo {
 
 	@Id
 	@Column(name = "id")
-	@SequenceGenerator(name = "seq_imagem", sequenceName = "seq_imagem_id", allocationSize = 1)
-	@GeneratedValue(generator = "seq_imagem", strategy = GenerationType.SEQUENCE)
+	@SequenceGenerator(name = "seq_arquivo", sequenceName = "seq_arquivo_id", allocationSize = 1)
+	@GeneratedValue(generator = "seq_arquivo", strategy = GenerationType.SEQUENCE)
 	private Integer id;
 	
 	@Column(name = "nome")
@@ -74,10 +74,10 @@ public class Imagem {
 		if (this == obj) {
 			return true;
 		}
-		if (!(obj instanceof Imagem)) {
+		if (!(obj instanceof Arquivo)) {
 			return false;
 		}
-		Imagem other = (Imagem) obj;
+		Arquivo other = (Arquivo) obj;
 		if (id == null) {
 			if (other.id != null) {
 				return false;

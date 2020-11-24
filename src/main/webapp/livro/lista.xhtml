@@ -172,10 +172,36 @@
 					</p:tab>
 					
 					<p:tab title="Imagens">
-						<p:dataTable id="listaImagens">
+						<p:dataTable id="listaImagens"
+								var="obj" value="#{livroController.livro.imagens}"
+								rowIndexVar="index" 
+								tableStyle="table-layout: auto">
 							<f:facet name="header">
-								<p:commandButton value="Adicionar" icon="pi pi-plus" oncomplete="PF('dlgEmvioImagem').show();"/>
+								<p:commandButton value="Adicionar" actionListener="#{livroController.novaImagem()}" icon="pi pi-plus" oncomplete="PF('dlgEnvioImagem').show();"
+										update="formEnvioImagem"/>
 							</f:facet>
+							
+							<p:column headerText="Nome">
+								<h:commandLink action="#{livroController.downloadImagem(index)}">
+									<h:outputText value="#{obj.nome}" />
+								</h:commandLink>
+							</p:column>
+							
+							
+							<p:column headerText="Descrição">
+								<h:outputText value="#{obj.descricao}" />
+							</p:column>
+							
+							<p:column style="width: 70px; text-align: center">
+								<p:commandButton icon="pi pi-eye" title="Visualizar Imagem"
+										action="#{livroController.visualizarImagem(index)}" 
+										process="@this" update="formVerImagem"
+										oncomplete="PF('dlgVerImagem').show();"/>
+								<p:commandButton icon="pi pi-times"
+										action="#{livroController.removerImagem(index)}"
+										update="listaImagens"/>
+							</p:column>
+							
 						</p:dataTable>
 					</p:tab>
 					
@@ -216,9 +242,29 @@
 			</h:form>
 		</p:dialog>
 		
-		<p:dialog widgetVar="dlgEmvioImagem" header="Enviar Imagem" resizable="false" modal="true" width="40%" height="100%">
-			<h:form id="formEnvioImagem">
-				
+		<p:dialog widgetVar="dlgEnvioImagem" header="Enviar Imagem" resizable="false" modal="true" width="40%" height="100%">
+			<h:form id="formEnvioImagem" prependId="false">
+				<p:panelGrid columns="2" style="width: 100%">
+					<p:outputLabel value="Descricao"/>
+					<p:inputText value="#{livroController.imagem.descricao}" style="width: 100%"/>
+					
+					<p:outputLabel value="Foto"/>
+					<p:column colspan="2">
+						<p:inputText id="nomeImagem" value="#{livroController.imagem.nome}" style="width: 100%"/>
+						<p:fileUpload mode="advanced" update="growl nomeImagem" auto="true" label="Selecionar" style="width: 100%"
+								fileUploadListener="#{livroController.enviarImagem}"/>
+					</p:column>
+				</p:panelGrid>
+				<p:commandButton value="Salvar"
+						update="tab:listaImagens"
+						actionListener="#{livroController.salvarImagem()}"
+						oncomplete="if (!args.validationFailed) {PF('dlgEmvioImagem').hide();}"/>
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog widgetVar="dlgVerImagem" header="Visualizar Imagem" resizable="false" modal="true" width="40%" height="100%">
+			<h:form id="formVerImagem" prependId="false">
+				<p:graphicImage value="#{livroController.imagemDinamica}" cache="false"/>
 			</h:form>
 		</p:dialog>
 
