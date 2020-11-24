@@ -95,6 +95,9 @@ public class LivroController extends AbstractController {
 		return "/livro/lista.xhtml?faces-redirect=true";
 	}
 	
+	public void imprimirRelatorio() {
+		dao.imprimir();
+	}
 	
 	public void novaImagem() {
 		imagem = new Imagem();
