@@ -63,7 +63,7 @@ public class AutorController extends AbstractController {
 	
 	@Override
 	public String irParaLista() {
-		return "/autor/lista.xhtml?faces-redirect=true";
+		return "/app/autor/lista.xhtml?faces-redirect=true";
 	}
 	
 	private void limparLista() {

@@ -92,7 +92,7 @@ public class LivroController extends AbstractController {
 	
 	@Override
 	public String irParaLista() {
-		return "/livro/lista.xhtml?faces-redirect=true";
+		return "/app/livro/lista.xhtml?faces-redirect=true";
 	}
 	
 	public void imprimirRelatorio() {

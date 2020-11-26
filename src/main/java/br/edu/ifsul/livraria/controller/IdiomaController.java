@@ -63,7 +63,7 @@ public class IdiomaController extends AbstractController {
 	
 	@Override
 	public String irParaLista() {
-		return "/idioma/lista.xhtml?faces-redirect=true";
+		return "/app/idioma/lista.xhtml?faces-redirect=true";
 	}
 
 	public Idioma getIdioma() {

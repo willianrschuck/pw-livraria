@@ -70,7 +70,7 @@ public class CatalogoController extends AbstractController {
 
 	@Override
 	public String irParaLista() {
-		return "/catalogo/lista.xhtml?faces-redirect=true";
+		return "/app/catalogo/lista.xhtml?faces-redirect=true";
 	}
 	
 	public Catalogo getCatalogo() {

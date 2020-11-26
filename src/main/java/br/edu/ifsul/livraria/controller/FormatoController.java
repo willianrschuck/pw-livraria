@@ -74,7 +74,7 @@ public class FormatoController extends AbstractController implements Serializabl
 	
 	@Override
 	public String irParaLista() {
-		return "/formato/lista.xhtml?faces-redirect=true";
+		return "/app/formato/lista.xhtml?faces-redirect=true";
 	}
 
 	public FiltroTabelaLazy<Formato> getTabelaLazy() {
