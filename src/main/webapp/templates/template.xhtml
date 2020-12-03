@@ -25,13 +25,14 @@
 			<p:menuitem value="Início"
 				url="#{facesContext.externalContext.requestContextPath}/index.xhtml"
 				icon="pi pi-home" />
-			<p:submenu label="Cadastros" rendered="#{loginController.usuarioAutenticado != null}">
+			<p:submenu label="Cadastros" rendered="#{p:ifAnyGranted('USUARIO, ADMINISTRADOR')}">
 				<p:column>
 					<p:submenu label="Básicos">
 						<p:menuitem action="#{autorController.irParaLista()}" value="Autor" ajax="false"/>
 						<p:menuitem action="#{livroController.irParaLista()}" value="Livro" ajax="false"/>
 						<p:menuitem action="#{idiomaController.irParaLista()}" value="Idioma" ajax="false"/>
 						<p:menuitem action="#{formatoController.irParaLista()}" value="Formato" ajax="false"/>
+						<p:menuitem action="#{usuarioController.irParaLista()}" value="Usuário" ajax="false" rendered="#{p:ifGranted('ADMINISTRADOR')}"/>
 					</p:submenu>
 				</p:column>
 			</p:submenu>

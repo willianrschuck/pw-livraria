@@ -58,6 +58,10 @@ public class LoginController implements Serializable {
 	
 	
 	public Usuario getUsuarioAutenticado() {
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		if (request.getUserPrincipal() != null) {
+			usuarioAutenticado = dao.getBy(request.getUserPrincipal().getName());
+		}
 		return usuarioAutenticado;
 	}
 
@@ -69,11 +73,6 @@ public class LoginController implements Serializable {
 		return dao;
 	}
 
-	public void setDao(UsuarioDAO dao) {
-		this.dao = dao;
-	}
-
-
 	public String getUsername() {
 		return username;
 	}
@@ -81,7 +80,6 @@ public class LoginController implements Serializable {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
 
 	public String getPassword() {
 		return password;
